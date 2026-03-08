@@ -1,0 +1,22 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon ./source/server.js"
+  },
+  "author": "fede",
+  "license": "MIT",
+  "dependencies": {
+    "@google/genai": "^1.28.0",
+    "@google/generative-ai": "^0.24.1",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.3.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "nodemon": "^3.1.10",
+    "pg": "^8.19.0",
+    "readline-sync": "^1.4.10"
+  }
+}

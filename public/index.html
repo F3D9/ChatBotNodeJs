@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Chat — Paleta personalizada</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+    
+    <body>
+        <nav class="navbar">
+            <div class="nav-links" id="menu">
+                <a href="/" class="active">Chat</a>
+                <!-- <button id="BotonSesion" >Cerrar Sesion</button>
+                <a href="/login" >Login</a>
+                <a href="/register">Register</a> -->
+            </div>
+        </nav>
+        <main class="app">
+            <section class="card" role="region" aria-label="Chat con bot">
+                <header class="header">
+                    <div class="brand">CB</div>
+                    <div class="titles">
+                        <h1 class="title color2">ChatBot — Asistente</h1>
+                        <p class="subtitle">Escribe abajo y prueba respuestas rápidas del bot</p>
+                    </div>
+                    <div class="palette" aria-hidden>
+                        <span class="swatch sw1" title="#140f07"></span>
+                        <span class="swatch sw2" title="#0e274c"></span>
+                        <span class="swatch sw3" title="#3462b1"></span>
+                        <span class="swatch sw4" title="#6da5fe"></span>
+                        <span class="swatch sw5" title="#bcf2f9"></span>
+                    </div>
+                </header>
+
+                <div class="chat-wrap">
+                    <div class="messages" id="messages" aria-live="polite">
+                        <!-- Mensajes de ejemplo (solo HTML/CSS en este pedido) -->
+                    </div>
+
+
+                    <form class="composer" action="#" method="post" onsubmit="return false;">
+                        <div class="input">
+                            <input id="inputClient" type="text" name="message" placeholder="Escribe un mensaje..." aria-label="Escribir mensaje">
+                        </div>
+                        <button onclick="createMessage()" type="submit" class="send">Enviar</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+        <script src="script.js"></script>
+    </body>
+</html>
