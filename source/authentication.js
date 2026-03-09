@@ -16,12 +16,12 @@ const dbUsuarios = new Pool({
 
 async function userAlreadyCreated(user,email){
     const resultUserName = await dbUsuarios.query(
-        'SELECT Username FROM Users WHERE Username like $1',
+        'SELECT username FROM users WHERE username like $1',
         [user]
     );
 
     const resultEmail = await dbUsuarios.query(
-        'SELECT Email FROM Users WHERE Email like $1',
+        'SELECT email FROM users WHERE email like $1',
         [email]
     );
 
@@ -33,14 +33,14 @@ async function userAlreadyCreated(user,email){
 
 async function createUserDataBase(user,email,password){
     const result = await dbUsuarios.query(
-        'INSERT INTO Users(username,email,password) VALUES ($1,$2,$3)',
+        'INSERT INTO users(username,email,password) VALUES ($1,$2,$3)',
         [user,email,password]  
     );
 }
 
 async function emailAlreadyRegisted(email){
     const resultEmail = await dbUsuarios.query(
-        'SELECT username,password FROM Users WHERE email = $1',
+        'SELECT username,password FROM users WHERE email = $1',
         [email]
     );
 
