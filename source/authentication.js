@@ -3,16 +3,24 @@ const bcryptjs = require('bcryptjs');
 const { redirect, status } = require('express/lib/response');
 const jsonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const { connectionString, ssl } = require('pg/lib/defaults');
 
 dotenv.config();
 
 const dbUsuarios = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT
+    connectionString: process.env.DATABASE_URL,
+    ssl:{
+        rejectUnauthorized:false
+    }
 });
+
+// const dbUsuarios = new Pool({
+//     user: process.env.DB_USER,
+//     host: process.env.DB_HOST,
+//     database: process.env.DB_NAME,
+//     password: process.env.DB_PASSWORD,
+//     port: process.env.DB_PORT
+// });
 
 async function userAlreadyCreated(user,email){
     const resultUserName = await dbUsuarios.query(
