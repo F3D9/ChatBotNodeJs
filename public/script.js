@@ -31,22 +31,51 @@ function createBotMessage(data){
   document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
 }
 
-const token = document.cookie.includes("jwt");
 
-if(token){
-  document.getElementById("menu").innerHTML +=  ` 
-    <button id="BotonSesion" class="send" >Cerrar Sesion</button>
-  `
-  document.getElementById("BotonSesion").addEventListener("click",()=>{
-    document.cookie = 'jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    document.location.href = "/"
-  })
+async function getJWT(){
+  const token = await fetch("/api/auth/check",{
+    credentials:'include'
+  });
 
-}else{
-  document.getElementById("menu").innerHTML +=  ` 
-    <a href="/login" >Login</a>
-    <a href="/register">Register</a>
-  `
+  const data = await token.json()
+
+  if(data.loggedIn){
+    document.getElementById("menu").innerHTML +=  ` 
+      <button id="BotonSesion" class="send" >Cerrar Sesion</button>
+    `
+    document.getElementById("BotonSesion").addEventListener("click",async (e)=>{
+      e.preventDefault();
+      const res = await fetch("/logout",{
+        method:"POST",
+        headers:{
+          "Content-Type": "application/json"
+        }
+      })
+
+      if(!res.ok){
+          alert("Error al cerrra sesion");
+          return;
+      } 
+
+      const resJson = await res.json();
+      if(resJson.redirect){
+          window.location.href = resJson.redirect;
+      }
+    })
+
+  }else{
+    document.getElementById("menu").innerHTML +=  ` 
+      <a href="/login" >Login</a>
+      <a href="/register">Register</a>
+    `
+  }
 }
+
+getJWT();
+
+
+
+
+
 
 

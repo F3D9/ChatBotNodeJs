@@ -55,6 +55,15 @@ async function emailAlreadyRegisted(email){
     return resultEmail;
 }
 
+async function deleteUserQuery(email){
+    const resultEmail = await dbUsuarios.query(
+        'DELETE FROM users WHERE email = $1',
+        [email]
+    )
+
+    return resultEmail;
+}
+
 
 async function login(req,res){
     const email = req.body.email;
@@ -81,7 +90,10 @@ async function login(req,res){
 
     const cookieOption= {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
-        paht:"/"
+        path:"/",
+        httpOnly:true,
+        secure:true,
+        sameSite:'strict'
     }
 
     res.cookie("jwt",token,cookieOption);
@@ -112,11 +124,29 @@ async function register(req,res){
 
 }
 
+async function deleteAcount(req,res){
+    const email = req.body.email;
+
+    const user = await emailAlreadyRegisted(email);
+    
+    if(user.rows.length == 0)
+        return res.status(400).send({status:"Error",message:"No existe ese usuario"});
+
+    const userDeleted = await deleteUserQuery(email);
+
+    if(!userDeleted)
+        return res.status(400).send({status:"Error",message:"Fallo al borrar cuenta"});
+    
+    return res.status(201).send({status:"ok",message:"Cuenta Borrada con exito"});
+
+
+}   
 
 module.exports = {
     methods:{
         register,
-        login
+        login,
+        deleteAcount
     }
 };
    
