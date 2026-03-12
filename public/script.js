@@ -31,7 +31,6 @@ function createBotMessage(data){
   document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
 }
 
-
 async function getJWT(){
   const token = await fetch("/api/auth/check",{
     credentials:'include'

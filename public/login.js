@@ -1,6 +1,3 @@
-const token = document.cookie.includes("jwt");
-if(token) window.location.href = "/"
-
 document.getElementById("login-form").addEventListener("submit", async (e)=>{
     e.preventDefault();
     const res = await fetch("/api/login",{
