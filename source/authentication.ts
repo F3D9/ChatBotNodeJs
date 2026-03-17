@@ -1,11 +1,9 @@
-const { Pool } = require('pg');
-const bcryptjs = require('bcryptjs');
-const { redirect, status } = require('express/lib/response');
-const jsonwebtoken = require('jsonwebtoken');
-const dotenv = require('dotenv');
-const { connectionString, ssl } = require('pg/lib/defaults');
-
-dotenv.config();
+import "dotenv/config";
+import { Pool } from "pg";
+import bcryptjs from "bcryptjs";
+import jsonwebtoken from "jsonwebtoken";
+import { StringValue } from "ms";
+import "./config/index.js";
 
 const dbUsuarios = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -22,31 +20,26 @@ const dbUsuarios = new Pool({
 //     port: process.env.DB_PORT
 // });
 
-async function userAlreadyCreated(user,email){
+async function userAlreadyCreated(user:string,email:string){
     const resultUserName = await dbUsuarios.query(
-        'SELECT username FROM users WHERE username like $1',
-        [user]
+        'SELECT username FROM users WHERE username = $1 or email = $2',
+        [user,email]
     );
 
-    const resultEmail = await dbUsuarios.query(
-        'SELECT email FROM users WHERE email like $1',
-        [email]
-    );
-
-    if(resultUserName.rows.length > 0 || resultEmail.rows.length > 0)
+    if(resultUserName.rows.length > 0)
         return true;
 
     return false;
 }   
 
-async function createUserDataBase(user,email,password){
-    const result = await dbUsuarios.query(
+async function createUserDataBase(user:string,email:string,password:string){
+    await dbUsuarios.query(
         'INSERT INTO users(username,email,password) VALUES ($1,$2,$3)',
         [user,email,password]  
     );
 }
 
-async function emailAlreadyRegisted(email){
+async function emailAlreadyRegisted(email:string){
     const resultEmail = await dbUsuarios.query(
         'SELECT username,password FROM users WHERE email = $1',
         [email]
@@ -55,7 +48,7 @@ async function emailAlreadyRegisted(email){
     return resultEmail;
 }
 
-async function deleteUserQuery(email){
+async function deleteUserQuery(email:string){
     const resultEmail = await dbUsuarios.query(
         'DELETE FROM users WHERE email = $1',
         [email]
@@ -63,7 +56,6 @@ async function deleteUserQuery(email){
 
     return resultEmail;
 }
-
 
 async function login(req,res){
     const email = req.body.email;
@@ -73,8 +65,8 @@ async function login(req,res){
         return res.status(400).send({status:"Error",message:"Los campos estan incompletos"});
     }
     
-    const userPassword = await emailAlreadyRegisted(email);
-    if(userPassword.length == 0)
+    const userPassword:any = await emailAlreadyRegisted(email);
+    if(userPassword.rows[0].username.length == 0)
         return res.status(400).send({status:"Error",message:"Los campos estan mal"});
 
     const loginCorrecto = await bcryptjs.compare(password,userPassword.rows[0].password);
@@ -85,11 +77,11 @@ async function login(req,res){
     const token = jsonwebtoken.sign(
         {user:userPassword.rows[0].username},
         process.env.JWT_SECRET,
-        {expiresIn:process.env.JWT_EXPIRATION}
+        {expiresIn:process.env.JWT_EXPIRATION as StringValue}
     );
 
     const cookieOption= {
-        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
+        expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES) * 24 * 60 * 60 * 1000),
         path:"/",
         httpOnly:true,
         secure:true,
@@ -139,14 +131,14 @@ async function deleteAcount(req,res){
     
     return res.status(201).send({status:"ok",message:"Cuenta Borrada con exito"});
 
-
 }   
 
-module.exports = {
-    methods:{
-        register,
-        login,
-        deleteAcount
-    }
-};
+export const authentication = {
+    register,
+    login,
+    deleteAcount
+}
+
+
+
    
