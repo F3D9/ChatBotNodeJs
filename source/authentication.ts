@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 import { StringValue } from "ms";
+import { Request, Response } from "express";
 import "./config/index.js";
 
 const dbUsuarios = new Pool({
@@ -57,7 +58,7 @@ async function deleteUserQuery(email:string){
     return resultEmail;
 }
 
-async function login(req,res){
+async function login(req:Request,res:Response){
     const email = req.body.email;
     const password = req.body.password;
 
@@ -85,7 +86,7 @@ async function login(req,res){
         path:"/",
         httpOnly:true,
         secure:true,
-        sameSite:'strict'
+        sameSite:'strict' as const
     }
 
     res.cookie("jwt",token,cookieOption);
@@ -93,7 +94,7 @@ async function login(req,res){
 
 }
 
-async function register(req,res){
+async function register(req:Request,res:Response){
     const user = req.body.user;
     const email = req.body.email;
     const password = req.body.password;
@@ -116,7 +117,7 @@ async function register(req,res){
 
 }
 
-async function deleteAcount(req,res){
+async function deleteAcount(req:Request,res:Response){
     const email = req.body.email;
 
     const user = await emailAlreadyRegisted(email);
