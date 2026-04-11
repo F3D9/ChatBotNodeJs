@@ -40,7 +40,7 @@ async function getJWT(){
 
   if(data.loggedIn){
     document.getElementById("menu").innerHTML +=  ` 
-      <button id="BotonSesion" class="send" >Cerrar Sesion</button>
+      <a id="BotonSesion" class="send" >Cerrar Sesion</a>
     `
     document.getElementById("BotonSesion").addEventListener("click",async (e)=>{
       e.preventDefault();
