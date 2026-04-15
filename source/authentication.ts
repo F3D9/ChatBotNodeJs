@@ -1,10 +1,11 @@
 import "dotenv/config";
-import { Pool } from "pg";
+import { Pool, Result } from "pg";
 import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 import { StringValue } from "ms";
 import { Request, Response } from "express";
 import "./config/index.js";
+import { debug } from "util";
 
 const dbUsuarios = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -90,7 +91,13 @@ async function login(req:Request,res:Response){
     }
 
     res.cookie("jwt",token,cookieOption);
-    res.send({status:"ok",message:"Usuario loggeado",redirect:"/"})
+    return res.json({ 
+        status: "ok", 
+        message: "Usuario loggeado", 
+        redirect: "/",
+        username: userPassword.rows[0].username, 
+        email: email 
+    })
 
 }
 
@@ -134,10 +141,76 @@ async function deleteAcount(req:Request,res:Response){
 
 }   
 
+async function createConversation(user: number, title:string){
+    const result = await dbUsuarios.query(
+        'INSERT INTO conversations(id_user, title) VALUES ($1,$2) RETURNING id_conversations',
+        [user,title]  
+    );
+    return result.rows[0].id_conversations;
+}
+
+async function createMessage(id_conversations:number,content:string,writer:string){
+    await dbUsuarios.query(
+        'INSERT INTO messages(id_conversations,content,writer) VALUES ($1,$2,$3)',
+        [id_conversations,content,writer]  
+    );
+}
+
+async function getMessages(id_conversations:number) {
+    await dbUsuarios.query(
+        'SELECT * FROM messages WHERE id_conversations = $1',
+        [id_conversations]  
+    );
+    
+}
+
+async function getConversations(id_user){
+    const result = await dbUsuarios.query(
+        'SELECT * FROM conversations WHERE id_user = $1',
+        [id_user]  
+    );
+    
+    return result;
+    
+}
+
+async function getOneConversation(id_user,title){
+    const result = await dbUsuarios.query(
+        'SELECT id_conversations FROM conversations WHERE id_user = $1 and title = $2 limit 1',
+        [id_user,title]  
+    );
+    return result.rows[0].id_conversations;
+}
+
+async function saveConversationMessages(id_conversations:number,message:string, id_user:number){
+    if(id_conversations == null){
+        id_conversations = await createConversation(id_user,message);
+    }
+    createMessage(id_conversations,message,"user")
+
+    return id_conversations;
+}
+
+async function getUserId(user:string,email:string){
+    const result = await dbUsuarios.query(
+        'SELECT id FROM users WHERE username = $1 and email = $2 limit 1',
+        [user,email]  
+    );
+    return result.rows[0].id;
+}
+
+async function saveBotMessages(id_conversations:number,message:string,){
+    createMessage(id_conversations,message,"bot");
+}
+
 export const authentication = {
     register,
     login,
-    deleteAcount
+    deleteAcount,
+    saveConversationMessages,
+    saveBotMessages,
+    getUserId,
+    getConversations
 }
 
 

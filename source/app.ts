@@ -40,6 +40,17 @@ const tokenCreated: RequestHandler = (req,res,next) => {
     }
 }
 
+const accountLogged: RequestHandler = (req,res,next) =>{
+    const token = req.cookies.jwt;
+    if (!token) return res.status(404);
+    try {
+        jwt.verify(token, process.env.JWT_SECRET!);
+        next();
+    } catch(err) {
+        return res.status(404);
+    }
+}
+
 app.get("/",(req,res) => {
 })
 
@@ -73,6 +84,30 @@ app.get('/api/auth/check',(req,res) =>{
         return res.status(401).send({status:"Error",message:"Error en la cookie",loggedIn: false });
     }
 }) 
+
+app.post('/api/saveChat',accountLogged,async (req,res)=>{
+    if(req.body.sender == "user"){
+        const id_user = await authentication.getUserId(req.body.username,req.body.email);
+        const id_conversations = await authentication.saveConversationMessages(req.body.id_conversations,req.body.message,id_user);
+        return res.status(200).json(id_conversations);
+    }else{
+        await authentication.saveBotMessages(req.body.id_conversations,req.body.message);
+        return res.status(200).json(req.body.id_conversations);
+    }
+})
+
+app.get('/api/getChats',accountLogged, async (req,res) =>{
+    const username = req.query.username as string;
+    const email = req.query.email as string;
+    const id_user = await authentication.getUserId(username,email);
+    const response2 = await authentication.getConversations(id_user);
+
+    return res.json(response2);
+})
+
+app.get('/api/getMessages',accountLogged,async (req,res) =>{
+    
+})
 
 app.get('/protected', (req,res) => {})
 

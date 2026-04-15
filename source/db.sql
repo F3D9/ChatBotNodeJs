@@ -8,9 +8,10 @@ Create Table users(
 Create Table conversations(
     id_conversations serial PRIMARY KEY,
     id_user INT not Null references users(id),
+    title Varchar(150) not Null,
 );
 
-CREATE Table Messages(
+CREATE Table messages(
     id_message serial PRIMARY KEY,
     id_conversations int not Null references conversations(id_conversations),
     content text not Null,
