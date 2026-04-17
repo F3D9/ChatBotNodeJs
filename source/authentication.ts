@@ -157,11 +157,11 @@ async function createMessage(id_conversations:number,content:string,writer:strin
 }
 
 async function getMessages(id_conversations:number) {
-    await dbUsuarios.query(
+    const res = await dbUsuarios.query(
         'SELECT * FROM messages WHERE id_conversations = $1',
         [id_conversations]  
     );
-    
+    return res;
 }
 
 async function getConversations(id_user){
@@ -171,7 +171,6 @@ async function getConversations(id_user){
     );
     
     return result;
-    
 }
 
 async function getOneConversation(id_user,title){
@@ -210,7 +209,9 @@ export const authentication = {
     saveConversationMessages,
     saveBotMessages,
     getUserId,
-    getConversations
+    getConversations,
+    getMessages,
+
 }
 
 
