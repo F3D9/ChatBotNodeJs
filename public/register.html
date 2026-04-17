@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="styles.css">
     <script src="register.js" defer></script>
 </head>
@@ -12,8 +14,8 @@
 
 <nav class="navbar">
     <div class="nav-links">
-        <a href="/" >Chat</a>
-        <a href="/login" >Login</a>
+        <a href="/">Chat</a>
+        <a href="/login">Login</a>
         <a href="/register" class="active">Register</a>
     </div>
 </nav>
@@ -21,24 +23,29 @@
 <main class="app">
     <section class="card auth-card">
         <header class="header">
-            <h1 class="title color2">Crear Cuenta</h1>
+            <h1 class="title">Crear cuenta</h1>
+            <p class="subtitle">Completá tus datos para registrarte</p>
         </header>
 
         <form class="auth-form" id="register-form">
             <div class="input" id="user">
-                <input type="text" placeholder="Nombre completo" required>
+                <input type="text" placeholder="Nombre completo" required autocomplete="name">
             </div>
 
             <div class="input" id="email">
-                <input type="email" placeholder="Correo electrónico" required>
+                <input type="email" placeholder="Correo electrónico" required autocomplete="email">
             </div>
 
             <div class="input" id="password">
-                <input type="password" placeholder="Contraseña" required>
+                <input type="password" placeholder="Contraseña" required autocomplete="new-password">
             </div>
 
-            <button class="send">Registrarse</button>
+            <button type="submit" class="send">Registrarse</button>
         </form>
+
+        <p class="auth-footer">
+            ¿Ya tenés cuenta? <a href="/login">Iniciá sesión</a>
+        </p>
     </section>
 </main>
 

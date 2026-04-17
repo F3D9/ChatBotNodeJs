@@ -17,6 +17,8 @@ document.getElementById("login-form").addEventListener("submit", async (e)=>{
     } 
 
     const resJson = await res.json();
+    localStorage.setItem('username',resJson.username)
+    localStorage.setItem('email',resJson.email)
     if(resJson.redirect){
         window.location.href = resJson.redirect;
     }

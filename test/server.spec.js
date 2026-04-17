@@ -1,19 +1,20 @@
-const app = require('../source/app.js');
-const request = require("supertest")
+import { describe, it, expect } from "vitest";
+import app from '../source/app.js';
+import request from "supertest";
 
 describe('GET Pages',() =>{
 
-    test('Chat page works', async () => {
+    it('Chat page works', async () => {
         const response = await request(app).get('/').send();
         expect(response.statusCode).toBe(200);
     })
 
-    test('Login page works', async () => {
+    it('Login page works', async () => {
         const response = await request(app).get('/login').send();
         expect(response.statusCode).toBe(200);
     })
 
-    test('Register page works', async () => {
+    it('Register page works', async () => {
         const response = await request(app).get('/register').send();
         expect(response.statusCode).toBe(200);
     })
@@ -21,7 +22,7 @@ describe('GET Pages',() =>{
 })
 
 describe('Register',()=>{
-    test('Succesful Registration', async () =>{
+    it('Succesful Registration', async () =>{
         const response = await request(app).post('/api/register').send({
             user:"prueba",
             email:"prueba@1",
@@ -30,7 +31,7 @@ describe('Register',()=>{
         expect(response.statusCode).toBe(201);
     })
 
-    test('Fail, Already Register', async () =>{
+    it('Fail, Already Register', async () =>{
         const response = await request(app).post('/api/register').send({
             user:"prueba",
             email:"prueba@1",
@@ -39,14 +40,14 @@ describe('Register',()=>{
         expect(response.statusCode).toBe(400);
     })
 
-    test('Succesful Delete User', async () =>{
+    it('Succesful Delete User', async () =>{
         const response = await request(app).post('/api/deleteAcount').send({
             email:"prueba@1",
         });
         expect(response.statusCode).toBe(201);
     })
 
-    test('Fail Delete User', async () =>{
+    it('Fail Delete User', async () =>{
         const response = await request(app).post('/api/deleteAcount').send({
             email:"prueba@1",
         });
@@ -57,12 +58,12 @@ describe('Register',()=>{
 
 describe('Login',()=>{
     
-    test('Fail Login Check', async () =>{
+    it('Fail Login Check', async () =>{
         const response = await request(app).get('/api/auth/check').send();
         expect(response.statusCode).toBe(401);
     })
 
-    test('Succesful Login', async () =>{
+    it('Succesful Login', async () =>{
         const response = await request(app).post('/api/login').send({
             email:"1@1",
             password:"1"
@@ -70,7 +71,7 @@ describe('Login',()=>{
         expect(response.statusCode).toBe(200);
     })
     
-    test('Fail Login', async () =>{
+    it('Fail Login', async () =>{
         const response = await request(app).post('/api/login').send({
             email:"1@1",
             password:"123"
@@ -78,7 +79,7 @@ describe('Login',()=>{
         expect(response.statusCode).toBe(400);
     })
 
-    test('Succesful Logout', async () =>{
+    it('Succesful Logout', async () =>{
         const response = await request(app).post('/logout').send({
             email:"1@1",
             password:"1"
