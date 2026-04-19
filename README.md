@@ -1,144 +1,128 @@
-# AI Chatbot Backend (Node.js)
+# AI Chatbot — Node.js, TypeScript & Gemini API
 
-Backend de un **chatbot con inteligencia artificial** desarrollado con **Node.js y Express**.
-La API permite a los usuarios registrarse, iniciar sesión y comunicarse con un asistente basado en **Google Gemini**.
+Backend of an **AI-powered chatbot** built with **Node.js, Express and TypeScript**.
+The API allows users to register, log in, and chat with an assistant powered by **Google Gemini**. Conversations are **saved per user**, enabling persistent chat history and multi-turn context.
+The project also includes a **frontend built with HTML, CSS and JavaScript**, providing a fully functional chat interface directly in the browser.
 
-Este proyecto fue creado como parte de mi trabajo y aprendizaje como **Backend Developer**, enfocándome en buenas prácticas de desarrollo, autenticación segura y despliegue en la nube.
+This project was created as part of my work and learning as a **Backend Developer**, focusing on clean architecture, secure authentication, persistent data and cloud deployment.
 
-🌐 **Demo en producción:**
+🌐 **Live demo:**
 https://chatbotnodejs.up.railway.app
 
 ---
 
-# Características
+# Features
 
-* Registro y autenticación de usuarios
-* Chat con IA utilizando Google Gemini
-* Autenticación basada en **JWT**
-* Hash seguro de contraseñas con **bcrypt**
-* Base de datos PostgreSQL
-* Contenedorización con Docker
-* Deploy en Railway
-* Arquitectura backend modular
-
----
-
-# Tecnologías utilizadas
-
-* **Node.js** – entorno de ejecución del backend
-* **Express.js** – framework para construir la API
-* **PostgreSQL** – base de datos relacional
-* **Neon** – hosting serverless para PostgreSQL
-* **Google Gemini API** – modelo de inteligencia artificial
-* **JWT (JSON Web Tokens)** – autenticación basada en tokens
-* **bcrypt** – hash seguro de contraseñas
-* **Docker & Docker Compose** – contenedores y entorno reproducible
-* **Railway** – plataforma de despliegue
+* User registration and authentication
+* Chat with AI using Google Gemini
+* **Persistent chat history** — conversations saved and retrieved per user
+* Multi-turn context — the assistant remembers previous messages in a session
+* JWT-based authentication
+* Secure password hashing with **bcrypt**
+* Role-based authorization
+* PostgreSQL database
+* Docker containerization
+* Railway deployment
+* **Frontend interface** built with HTML, CSS and JavaScript
 
 ---
 
-# Arquitectura
+# Tech Stack
 
-La aplicación sigue una arquitectura típica de backend con API REST:
+* **Node.js + TypeScript** — backend runtime and language
+* **Express.js** — REST API framework
+* **PostgreSQL** — relational database
+* **Neon** — serverless PostgreSQL hosting
+* **Google Gemini API** — AI language model
+* **JWT (JSON Web Tokens)** — token-based authentication
+* **bcrypt** — secure password hashing
+* **Vitest** — unit and integration testing
+* **Docker & Docker Compose** — containers and reproducible environment
+* **Railway** — deployment platform
+* **HTML, CSS, JavaScript** — frontend interface
+
+---
+
+# Architecture
 
 ```
-Cliente (Frontend / Browser)
+Client (Browser — HTML/CSS/JS)
           │
           ▼
      Node.js API
-      (Express)
+   (Express + TypeScript)
           │
-   ┌──────┴─────────┐
-   ▼                ▼
-PostgreSQL       Gemini API
-   (Neon)         (Google)
+   ┌──────┴──────────┐
+   ▼                 ▼
+PostgreSQL        Gemini API
+   (Neon)          (Google)
 ```
 
 ---
 
-# Seguridad y Autenticación
+# Security & Authentication
 
-La aplicación implementa un sistema de autenticación seguro:
+The application implements a secure authentication system:
 
-* **bcrypt** para almacenar contraseñas de forma hasheada
-* **JWT** para manejar sesiones de usuario
-* Tokens firmados con **JWT_SECRET**
-* Expiración configurable de tokens
-* Autenticación stateless mediante middleware
-
-Esto permite proteger las credenciales de los usuarios y mantener sesiones seguras.
-
----
-
-# Variables de entorno
-
-El proyecto utiliza las siguientes variables:
-
-```
-DATABASE_URL=postgresql_connection_string
-GEMINI_API_KEY=google_gemini_api_key
-
-JWT_SECRET=textosecretoDecifrado
-JWT_EXPIRATION=7d
-JWT_COOKIE_EXPIRES=1
-
-PORT=3000
-```
+* **bcrypt** for hashed password storage
+* **JWT** for stateless session management
+* Tokens signed with **JWT_SECRET** and configurable expiration
+* Auth middleware protecting private routes
+* Role-based authorization for access control
+* Input validation and secure endpoint design
 
 ---
 
-# Ejecutar el proyecto localmente
+# Chat History
 
-## Requisitos
+Each authenticated user has their own conversation history stored in PostgreSQL:
+
+* Chats are saved after each interaction
+* Full history is retrieved on login or page load
+* Multi-turn context is passed to Gemini on each request
+* Schema designed for efficient querying and relational integrity
+
+
+---
+
+# Running Locally
+
+## Requirements
 
 * Docker
-* Docker Compose
+
 * Git
 
----
+## 1. Clone the repository
 
-## 1. Clonar el repositorio
-
-```
-git clone <URL_DEL_REPOSITORIO>
-cd <NOMBRE_DEL_REPOSITORIO>
+```bash
+git clone <REPOSITORY_URL>
+cd <REPOSITORY_NAME>
 ```
 
----
+## 2. Create environment file
 
-## 2. Crear archivo de entorno
+Create a `.env` file at the root of the project and add the required variables listed above.
 
-Crear un archivo `.env` en la raíz del proyecto y agregar las variables necesarias.
+## 3. Build the containers
 
----
+First run:
 
-## 3. Construir los contenedores
-
-Primera ejecución:
-
-```
+```bash
 docker compose up --build
 ```
 
----
+## 4. Start the application
 
-## 4. Iniciar la aplicación
+After the first build:
 
-Luego de la primera build:
-
-```
+```bash
 docker compose up
 ```
 
-La API quedará disponible en:
-
-```
-http://localhost:3000
-```
-
 ---
 
-# Estructura del proyecto
+# Project Structure
 
 ```
 src/
@@ -148,7 +132,6 @@ src/
  ├── services
  ├── database
  └── app.js
-
 Dockerfile
 docker-compose.yml
 package.json
@@ -156,33 +139,30 @@ package.json
 
 ---
 
-# Deploy
+# Deployment
 
-La aplicación está desplegada utilizando:
+* **Railway** — backend hosting
+* **Neon** — PostgreSQL database
 
-* **Railway** para el hosting del backend
-* **Neon** para la base de datos PostgreSQL
-
-Podés probar la aplicación en:
-
-https://chatbotnodejs.up.railway.app
+Live at: https://chatbotnodejs.up.railway.app
 
 ---
 
-# Objetivo del proyecto
+# Goals
 
-El objetivo de este proyecto fue practicar y demostrar habilidades de **desarrollo backend**, incluyendo:
+This project was built to practice and demonstrate skills in:
 
-* diseño de APIs
-* autenticación segura
-* integración con servicios externos (IA)
-* contenedorización con Docker
-* despliegue en la nube
+* REST API design
+* Secure authentication and authorization
+* Integration with external AI services (Google Gemini)
+* Persistent data storage and relational database design
+* Docker containerization
+* Cloud deployment
 
 ---
 
-# Autor
+# Author
 
-**Backend Developer**
+**Federico Salgado — Backend Developer**
 
-Si te interesa este proyecto o querés ver más trabajos similares, podés visitar mi perfil de GitHub.
+Feel free to check out my other projects on [GitHub](https://github.com/F3D9).
