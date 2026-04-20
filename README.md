@@ -122,23 +122,6 @@ docker compose up
 
 ---
 
-# Project Structure
-
-```
-src/
- ├── controllers
- ├── routes
- ├── middleware
- ├── services
- ├── database
- └── app.js
-Dockerfile
-docker-compose.yml
-package.json
-```
-
----
-
 # Deployment
 
 * **Railway** — backend hosting
