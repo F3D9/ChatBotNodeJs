@@ -43,7 +43,7 @@ async function createUserDataBase(user:string,email:string,password:string){
 
 async function emailAlreadyRegisted(email:string){
     const resultEmail = await dbUsuarios.query(
-        'SELECT username,password FROM users WHERE email = $1',
+        'SELECT username,password FROM users WHERE email = $1 Limit 1',
         [email]
     );
 
@@ -68,7 +68,7 @@ async function login(req:Request,res:Response){
     }
     
     const userPassword:any = await emailAlreadyRegisted(email);
-    if(userPassword.rows[0].username.length == 0)
+    if(userPassword == null || userPassword.rows[0].username.length == 0)
         return res.status(400).send({status:"Error",message:"Los campos estan mal"});
 
     const loginCorrecto = await bcryptjs.compare(password,userPassword.rows[0].password);
